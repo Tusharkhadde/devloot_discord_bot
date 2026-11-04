@@ -5,7 +5,7 @@ DevLoot is an open-source bounty platform on Algorand. This repository contains 
 ## Features
 
 - **GitHub Onboarding & Verification**: Guides members through linking their GitHub account and verifying via Discord interaction to earn initial XP and the `Verified` role.
-- **Bounty Proposals & Voting**: Enables onboarded members to propose open GitHub issues for USDC bounties, browse top proposals from the past week, and vote on suggestions using emoji reactions (`👍`, `👎`, `💵`).
+- **Bounty Proposals & Community Signals**: Enables onboarded members to propose open GitHub issues for USDC bounties and browse top proposals from the past week. Members can vote with `👍` or `👎`, or use `💵` to signal interest in topping up a bounty.
 - **Auto-Threading**: Automatically generates dedicated discussion threads for new proposals and bounty announcements to keep channels organized.
 - **XP & Gamification**: Tracks user XP, daily claims with streak bonuses, daily quests, progression tiers (`Newcomer`, `Builder`, `Hunter`, `Legend`), and a community leaderboard.
 - **Server Setup & Moderation**: Provides an administrator command to initialize standard server channels and roles, and moderates designated bot channels by cleaning non-command messages.
@@ -16,7 +16,7 @@ DevLoot is an open-source bounty platform on Algorand. This repository contains 
 | Command         | Purpose                                                 | Required Arguments                                                                           | Access Restrictions                                                         |
 | --------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
 | `/onboarding`   | Start GitHub linking and server verification.           | None                                                                                         | Any member                                                                  |
-| `/propose`      | Suggest an open GitHub issue for a USDC bounty.         | `message` (short pitch)<br>`issue_url` (GitHub issue URL)<br>`bounty_amount` (number, min 1) | Onboarded members (rate-limited to 10/day per user, 10/day per server)      |
+| `/propose`      | Suggest an open GitHub issue for a USDC bounty.         | `message` (short pitch)<br>`issue_url` (GitHub issue URL)<br>`bounty_amount` (number, min 1) | Onboarded members (10 per rolling 24 hours per user; 10 per UTC calendar day across the database) |
 | `/daily`        | Claim daily XP reward and maintain streak.              | None                                                                                         | Onboarded members (24h cooldown)                                            |
 | `/rank`         | View your XP, tier, streaks, and proposal stats.        | None                                                                                         | Onboarded members                                                           |
 | `/quests`       | View today's available quests and completion status.    | None                                                                                         | Onboarded members                                                           |
@@ -55,7 +55,7 @@ Configure the required environment variables in your local environment or `.env`
 - `DISCORD_CLIENT_ID`: Discord application client ID.
 - `DATABASE_URL`: PostgreSQL connection string for Prisma.
 - `DISCORD_GUILD_ID` _(optional)_: Server ID for instant guild-scoped command registration during development.
-- `GITHUB_TOKEN` _(optional)_: GitHub personal access token for fetching issue metadata.
+- `GITHUB_TOKEN` _(required for `/propose`)_: GitHub personal access token used to verify issue metadata with the GitHub API.
 - `OPENROUTER_API_KEY` _(optional)_: API key for AI proposal analysis.
 - `CLIENT_URL` _(optional)_: Frontend base URL for linking accounts (defaults to `https://devloot.app`).
 
